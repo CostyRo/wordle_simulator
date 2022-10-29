@@ -1,8 +1,13 @@
 from random import choice
 
+from colorama import Back
+from colorama import init as init_colorama
+
 from wordle_func import *
 
 debug=False
+
+init_colorama(autoreset=True)
 
 def main():
     guess=choice(database)
@@ -34,8 +39,9 @@ def main():
         if debug:
             print(transformed_green_info,transformed_yellow_info,sep="\n")
             print(combine_info(transformed_green_info,transformed_yellow_info))
-
-        print(converted_info)
+        
+        print(" ".join(user_guess))
+        print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info))
         print()
 
         if user_guess==guess:
