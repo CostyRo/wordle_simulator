@@ -14,6 +14,7 @@ if __name__=="__main__":
         guess=choice(database)
 
     attempt=0
+    guesses=[]
 
     print("You opened Wordle!")
 
@@ -27,8 +28,12 @@ if __name__=="__main__":
         while len(user_guess)>5:
             print("Error!\nYour guess is too long!")
             user_guess=input("Write your guess: ")
+        while user_guess in guesses:
+            print("Error!\nYou already tried this word!")
+            user_guess=input("Write your guess: ")
 
         attempt+=1
+        guesses.append(user_guess)
 
         user_guess_list,guess_list=list(user_guess),list(guess)
 
