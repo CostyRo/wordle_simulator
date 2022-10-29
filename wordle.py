@@ -17,8 +17,7 @@ def combine_info(green_info,yellow_info):
 if __name__=="__main__":
     with open("database.txt","r") as f:
         database=f.read().split("\n")[:-1]
-        #guess=choice(database)
-        guess="POPII"
+        guess=choice(database)
 
     attempt=0
     guesses=[]
@@ -32,8 +31,8 @@ if __name__=="__main__":
         print(f"Attempt {attempt}/infinity!")
 
         user_guess=input("Write your guess: ")
-        while len(user_guess)>5:
-            print("Error!\nYour guess is too long!")
+        while len(user_guess)!=5:
+            print("Error!\nIncorrect size of your guess!")
             user_guess=input("Write your guess: ")
         while user_guess in guesses:
             print("Error!\nYou already tried this word!")
@@ -45,7 +44,7 @@ if __name__=="__main__":
         user_guess_list,guess_list=list(user_guess),list(guess)
 
         if debug:
-            transformed_green_info,transformed_yellow_info=transform(find_green_info(user_guess_list,guess_list)),transform(find_yellow_info(user_guess_list,guess_list),1)
+            transformed_green_info,transformed_yellow_info=transform_info(find_green_info(user_guess_list,guess_list)),transform_info(find_yellow_info(user_guess_list,guess_list),1)
             print(transformed_green_info,transformed_yellow_info,sep="\n")
             print(combine_info(transformed_green_info,transformed_yellow_info))
 
