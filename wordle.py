@@ -20,14 +20,10 @@ def combine_info(green_info,yellow_info):
 def convert_info(info):
     return "".join("X" if i==2 else "|" if i==1 else "0" for i in info)
 
-if __name__=="__main__":
-    with open("database.txt","r") as f:
-        guess=choice(f.read().split("\n")[:-1])
-
+def main():
+    guess=choice(database)
     attempt=0
     guesses=[]
-
-    print("You opened Wordle!")
 
     if debug:
         print(guess)
@@ -57,5 +53,14 @@ if __name__=="__main__":
             print(converted_info)
 
         if user_guess==guess:
-            print(f"The word was {guess}. You guessed it in {attempt} attemps!")
-            quit()
+            print(f"The word was {guess}. You guessed it in {attempt} attemps!\n")
+            break
+
+if __name__=="__main__":
+    with open("database.txt","r") as f:
+        database=f.read().split("\n")[:-1]
+
+    print("You opened Wordle!\n")
+    
+    while True:
+        main()
