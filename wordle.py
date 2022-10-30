@@ -18,7 +18,7 @@ def main():
         print(guess)
 
     while True:
-        print(f"Attempt {attempt}/∞!")
+        print(f"Attempt {attempt}/11454!")
 
         user_guess=receive_word()
         while len(user_guess)!=5:
@@ -26,6 +26,9 @@ def main():
             user_guess=receive_word()
         while user_guess in guesses:
             print("Error!\nYou already tried this word!")
+            user_guess=receive_word()
+        while user_guess not in database:
+            print("Error!\nThis word doesn't exist!")
             user_guess=receive_word()
 
         attempt+=1
@@ -40,7 +43,7 @@ def main():
             print(transformed_green_info,transformed_yellow_info,sep="\n")
             print(combine_info(transformed_green_info,transformed_yellow_info))
         
-        print(" ".join(user_guess))
+        print(*user_guess)
         print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info))
         print()
 
