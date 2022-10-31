@@ -9,6 +9,8 @@ debug=True
 
 init_colorama(autoreset=True)
 
+init_colorama(autoreset=True)
+
 def main():
     guess=choice(database)
     attempt=0
@@ -17,7 +19,11 @@ def main():
     if debug:
         print(guess)
 
+<<<<<<< HEAD
     while 1:
+=======
+    while True:
+>>>>>>> d8d24d03a7dcd8577802679abaa0e1446b7b1d91
         print(f"Attempt {attempt}/11454!")
 
         user_guess=receive_word()
