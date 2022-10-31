@@ -19,41 +19,38 @@ def main():
     if debug:
         print(guess)
 
-<<<<<<< HEAD
     while 1:
-=======
-    while True:
->>>>>>> d8d24d03a7dcd8577802679abaa0e1446b7b1d91
-        print(f"Attempt {attempt}/11454!")
+        while True:
+            print(f"Attempt {attempt}/11454!")
 
-        user_guess=receive_word()
-        while len(user_guess)!=5:
-            print_error("Incorrect size of your guess!")
             user_guess=receive_word()
-        while user_guess in guesses:
-            print_error("You already tried this word!")
-            user_guess=receive_word()
-        while user_guess not in database:
-            print_error("This word doesn't exist!")
-            user_guess=receive_word()
+            while len(user_guess)!=5:
+                print_error("Incorrect size of your guess!")
+                user_guess=receive_word()
+            while user_guess in guesses:
+                print_error("You already tried this word!")
+                user_guess=receive_word()
+            while user_guess not in database:
+                print_error("This word doesn't exist!")
+                user_guess=receive_word()
 
-        attempt+=1
-        guesses.append(user_guess)
+            attempt+=1
+            guesses.append(user_guess)
 
-        transformed_green_info,transformed_yellow_info=transform_info(find_green_info(user_guess,guess)),transform_info(find_yellow_info(user_guess,list(guess)),1)
-        combined_info=combine_info(transformed_green_info,transformed_yellow_info)
-        converted_info=convert_info(combined_info)
+            transformed_green_info,transformed_yellow_info=transform_info(find_green_info(user_guess,guess)),transform_info(find_yellow_info(user_guess,list(guess)),1)
+            combined_info=combine_info(transformed_green_info,transformed_yellow_info)
+            converted_info=convert_info(combined_info)
 
-        if debug:
-            print(transformed_green_info,transformed_yellow_info,sep="\n")
-            print(combined_info)
-        
-        print(*user_guess)
-        print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info),"\n")
+            if debug:
+                print(transformed_green_info,transformed_yellow_info,sep="\n")
+                print(combined_info)
+            
+            print(*user_guess)
+            print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info),"\n")
 
-        if user_guess==guess:
-            print(f"The word was {guess}. You guessed it in {attempt} attempts!\n")
-            break
+            if user_guess==guess:
+                print(f"The word was {guess}. You guessed it in {attempt} attempts!\n")
+                break
 
 if __name__=="__main__":
     with open("database.txt","r") as f:
