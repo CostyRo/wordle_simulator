@@ -1,5 +1,10 @@
+from colorama import Fore
+
 def receive_word():
     return input("Write your guess: ").upper()
+
+def print_error(error_message):
+    print(f"{Fore.RED}Error!\n{error_message}")
 
 def find_green_info(user_guess,guess):
     return [i==j for i,j in zip(user_guess,guess)]
