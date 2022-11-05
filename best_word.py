@@ -1,5 +1,6 @@
 from math import log2
 from itertools import product
+from json import dump as dump_json
 
 from tqdm import tqdm
 
@@ -14,6 +15,8 @@ word_possibilities=("".join(i) for i in product(*[letter_possibilities for _ in 
 
 probability_counter={i: 0 for i in word_possibilities}
 
+words_entropy={}
+
 for word in tqdm(database):
     probability_counter=probability_counter.fromkeys(probability_counter,0)
 
@@ -23,5 +26,9 @@ for word in tqdm(database):
         probability_counter[convert_info(combine_info(transformed_green_info,transformed_yellow_info))]+=1
 
     entropy=sum((i/11454)*(log2(i) if i else 0) for i in probability_counter.values())
+    words_entropy[word]=entropy
 
     print(f"{word} has entropy of {entropy} bits.")
+
+with open("words_entropy.json","w") as f:
+    dump_json(words_entropy,f,indent=4)
