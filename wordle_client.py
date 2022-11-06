@@ -47,8 +47,7 @@ def main():
                     probability_counter[convert_info(combine_info(transformed_green_info,transformed_yellow_info))]+=1
                     entropy=sum((i/len(possible_words))*log2(len(possible_words)/i) for i in probability_counter.values())
                     words_entropy[word]=entropy
-            last_word=max(words_entropy,key=words_entropy.get)
-            expected_entropy=max(words_entropy.values())
+            last_word,expected_entropy=max(words_entropy.items(),key=lambda x: x[1])
             connection.send(last_word.encode())
 
 if __name__=="__main__":
