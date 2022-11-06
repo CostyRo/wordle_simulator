@@ -9,8 +9,6 @@ debug=True
 
 init_colorama(autoreset=True)
 
-init_colorama(autoreset=True)
-
 def main():
     guess=choice(database)
     attempt=0
@@ -20,7 +18,7 @@ def main():
         print(guess)
 
     while 1:
-        while True:
+        while 1:
             print(f"Attempt {attempt}/11454!")
 
             user_guess=receive_word()
@@ -40,10 +38,6 @@ def main():
             transformed_green_info,transformed_yellow_info=transform_info(find_green_info(user_guess,guess)),transform_info(find_yellow_info(user_guess,list(guess)),1)
             combined_info=combine_info(transformed_green_info,transformed_yellow_info)
             converted_info=convert_info(combined_info)
-
-            if debug:
-                print(transformed_green_info,transformed_yellow_info,sep="\n")
-                print(combined_info)
             
             print(*user_guess)
             print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info),"\n")

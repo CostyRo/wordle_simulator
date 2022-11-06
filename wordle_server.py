@@ -24,8 +24,8 @@ def main():
         if debug:
             print(guess)
 
-        while 1:
-            with (conn:=server.accept()[0]):
+        with (conn:=server.accept()[0]):
+            while 1:
                 user_guess=conn.recv(5).decode("utf-8")
                 print(f"Your guess is: {user_guess}")
 
@@ -35,10 +35,6 @@ def main():
                 combined_info=combine_info(transformed_green_info,transformed_yellow_info)
                 converted_info=convert_info(combined_info)
                 conn.send(converted_info.encode())
-
-                if debug:
-                    print(transformed_green_info,transformed_yellow_info,sep="\n")
-                    print(combined_info)
 
                 print(*user_guess)
                 print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info),"\n")
@@ -58,4 +54,4 @@ if __name__=="__main__":
 
     print("You opened Wordle!\n")
 
-	main()
+    main()
