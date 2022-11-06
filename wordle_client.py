@@ -1,18 +1,16 @@
 import socket
 from math import log2
-from itertools import product
+from collections import defaultdict
 
 from tqdm import tqdm
 
 from wordle_func import *
 
-word_possibilities=("".join(i) for i in product(*["X0|"]*5) if sum(map(ord,i))!=476)
-
 SERVER=socket.gethostbyname(socket.gethostname())
 PORT=8555
 
 def main():
-    probability_counter={i: 0 for i in word_possibilities}
+    probability_counter=defaultdict(int)
     sum_matches,no_matches=0,0
     while 1:
         connection.send(b"TAREI")
@@ -35,7 +33,7 @@ def main():
                 correct_word=next(iter(possible_words))
                 connection.send(correct_word.encode())
                 connection.recv(5)
-                probability_counter={i: 0 for i in probability_counter}
+                probability_counter.clear()
                 sum_matches+=attempt
                 no_matches+=1
                 print(f"Correct word was {correct_word}, guessed in {attempt} attemps.\nAverage score is {sum_matches/no_matches} in {no_matches} matches.\n")
@@ -43,11 +41,11 @@ def main():
             
             words_entropy={}
             for word in tqdm(database,desc="Searching for new best word"):
-                probability_counter={i: 0 for i in probability_counter}
+                probability_counter.clear()
                 for guess in possible_words:
                     transformed_green_info,transformed_yellow_info=transform_info(find_green_info(word,guess)),transform_info(find_yellow_info(word,list(guess)),1)
                     probability_counter[convert_info(combine_info(transformed_green_info,transformed_yellow_info))]+=1
-                    entropy=sum((i/len(possible_words))*log2(len(possible_words)/i) for i in filter(lambda x: x>0,probability_counter.values()))
+                    entropy=sum((i/len(possible_words))*log2(len(possible_words)/i) for i in probability_counter.values())
                     words_entropy[word]=entropy
             last_word=max(words_entropy,key=words_entropy.get)
             expected_entropy=max(words_entropy.values())
