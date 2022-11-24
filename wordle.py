@@ -1,6 +1,5 @@
 from random import choice
 
-from colorama import Back
 from colorama import init as init_colorama
 
 from wordle_func import *
@@ -10,47 +9,47 @@ debug=True
 init_colorama(autoreset=True)
 
 def main():
-    guess=choice(database)
-    attempt=0
-    guesses=[]
 
-    if debug:
-        print(guess)
+  """Main function of this game"""
 
-    while 1:
-        while 1:
-            print(f"Attempt {attempt}/11454!")
+  guess=choice(database)
+  attempt,guesses=0,[]
+  # initialise the game
 
-            user_guess=receive_word()
-            while len(user_guess)!=5:
-                print_error("Incorrect size of your guess!")
-                user_guess=receive_word()
-            while user_guess in guesses:
-                print_error("You already tried this word!")
-                user_guess=receive_word()
-            while user_guess not in database:
-                print_error("This word doesn't exist!")
-                user_guess=receive_word()
+  if debug: print(guess)
 
-            attempt+=1
-            guesses.append(user_guess)
+  while 1:
+    print(f"Attempt {attempt}/11454!")
 
-            transformed_green_info,transformed_yellow_info=transform_info(find_green_info(user_guess,guess)),transform_info(find_yellow_info(user_guess,list(guess)),1)
-            combined_info=combine_info(transformed_green_info,transformed_yellow_info)
-            converted_info=convert_info(combined_info)
-            
-            print(*user_guess)
-            print(*map(lambda x: f"""{Back.GREEN if x=="X" else Back.YELLOW if x=="|" else ""}X""",converted_info),"\n")
+    user_guess=receive_word()
+    while len(user_guess)!=5:
+      print_error("Incorrect size of your guess!")
+      user_guess=receive_word()
+    while user_guess in guesses:
+      print_error("You already tried this word!")
+      user_guess=receive_word()
+    while user_guess not in database:
+      print_error("This word doesn't exist!")
+      user_guess=receive_word()
+    # make sure that everything is fine
 
-            if user_guess==guess:
-                print(f"The word was {guess}. You guessed it in {attempt} attempts!\n")
-                break
+    attempt+=1
+    guesses.append(user_guess)
+
+    print_word(user_guess,guess)
+
+    if user_guess==guess:
+      print(f"The word was {guess}. You guessed it in {attempt} attempts!\n")
+      break
+    # finish the game when the player guess the word
 
 if __name__=="__main__":
-    with open("database.txt","r") as f:
-        database=f.read().split("\n")[:-1]
+  with open("database.txt","r") as f:
+    database=f.read().split("\n")[:-1]
+  # load the database into a list
 
-    print("You opened Wordle!\n")
-    
-    while 1:
-        main()
+  print("You opened Wordle!\n")
+
+  while 1:
+    main()
+  # make an endless game

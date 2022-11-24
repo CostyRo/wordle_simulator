@@ -1,30 +1,24 @@
-from math import log2
+from time import time
 from json import dump as dump_json
-from collections import defaultdict
-
-from tqdm import tqdm
+from multiprocessing import cpu_count,Manager,Process
 
 from wordle_func import *
 
 if __name__=="__main__":
-    with open("database.txt","r") as f:
-        database=f.read().split("\n")[:-1]
+  start_time=time()
+  words_entropy=Manager().dict()
+  thread_list=[
+    Process(target=calculate_best_word,args=(start,stop,words_entropy))
+      for start,stop in chunks(11454,cpu_count()-1)
+  ]
+  # create processes for calculating the entropy of all words
 
-    probability_counter=defaultdict(int)
-    words_entropy={}
+  [*map(lambda t: t.start(),thread_list)]
+  [*map(lambda t: t.join(),thread_list)]
+  # start and wait all the processes
 
-    for word in tqdm(database):
-        probability_counter.clear()
+  print(f"Finished in {time()-start_time} seconds")
 
-        for guess in tqdm(database):
-            transformed_green_info,transformed_yellow_info=transform_info(find_green_info(word,guess)),transform_info(find_yellow_info(word,list(guess)),1)
-
-            probability_counter[convert_info(combine_info(transformed_green_info,transformed_yellow_info))]+=1
-
-        entropy=sum((i/11454)*log2(11454/i) for i in probability_counter.values())
-        words_entropy[word]=entropy
-
-        print(f"{word} has entropy of {entropy} bits.")
-
-    with open("words_entropy.json","w") as f:
-        dump_json(words_entropy,f,indent=4)
+  with open(f"words_entropy.json","w") as f:
+    dump_json(dict(words_entropy),f,indent=4)
+  # put the information about entropies in a json file
