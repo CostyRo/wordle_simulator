@@ -1,0 +1,40 @@
+{
+  "RO": {
+    "word's_entropy": "{} are entropia {} biti.",
+    "last_attempt": "Incercarea {}/11454!",
+    "error1": "Cuvantul are marimea incorecta!",
+    "error2": "Ati incercat deja acest cuvant!",
+    "error3": "Acest cuvant nu exista!",
+    "the_good_word": "Cuvantul a fost {}. L-ati ghicit din {} incercari!\n",
+    "start_message": "Ati deschis Wordle!\n",
+    "expected_entropy": "Entropia cuvantului {} a fost {}. Entropia asteptata era {}.",
+    "searching_possibilities": "Cauta noi posibilitati de cuvinte",
+    "possible_words": "Cuvinte posibile: {}.\n",
+    "correct_word": "Cuvantul corect era {}, ghicit in {} incercari.\nMedia scorului este {} in {} meciuri.\n",
+    "searching_new_best": "Cauta un nou cel mai bun cuvant",
+    "your_guess": "Ghiciti cuvantul: ",
+    "error4": "{}Eroare!\n{}",
+    "initial_word": "Cuvantul este {}",
+    "user_guess": "Incercarea ta este: {}",
+    "finish": "ATI TERMINAT!!!"
+  },
+  "EN": {
+    "word's_entropy": "{} has entropy of {} bits.",
+    "last_attempt": "Attempt {}/11454!",
+    "error1": "Incorrect size of your guess!",
+    "error2": "You already tried this word!",
+    "error3": "This word doesn't exist!",
+    "the_good_word": "The word was {}. You guessed it in {} attempts!\n",
+    "start_message": "You opened Wordle!\n",
+    "expected_entropy": "Entropy of {} was {}. Expected entropy was {}.",
+    "searching_possibilities": "Searching for word possibilities",
+    "possible_words": "Possible words: {}.\n",
+    "correct_word": "Correct word was {}, guessed in {} attempts.\nAverage score is {} in {} matches.\n",
+    "searching_new_best": "Searching for new best word",
+    "your_guess": "Write your guess: ",
+    "error4": "{}Error!\n{}",
+    "initial_word": "The word is {}",
+    "user_guess": "Your guess is: {}",
+    "finish": "FINISHED!!!"
+  }
+}
