@@ -1,5 +1,6 @@
 import socket
 from math import log2
+from multiprocessing import cpu_count,Manager,Process
 
 from tqdm import tqdm
 
@@ -45,12 +46,20 @@ def main():
       # if we know the correct word, send it and receive the success code("XXXXX")
       # update statistics of the game and display them, and break this connection
 
+      words_entropy=Manager().dict()
+      thread_list=[
+        Process(target=calculate_best_word,args=(start,stop,possible_words,list(database),words_entropy))
+          for start,stop in chunks(11454,cpu_count()-1)
+      ]
+      # create processes for calculating next best word
+      
+      print("Search for new best word.")
+      execute_threads(thread_list)
+
       last_word,expected_entropy=max(
-        calculate_entropy(
-          possible_words,
-          tqdm(database,desc="Searching for new best word")
-        ).items(),
-        key=lambda x: x[1])
+        words_entropy.items(),
+        key=lambda x: x[1]
+      )
       # calculate entropy for all words and find the best word and it's entropy
 
       connection.send(last_word.encode())

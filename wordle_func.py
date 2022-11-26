@@ -1,10 +1,8 @@
+from time import time
 from math import log2
 from collections import Counter
 
 from colorama import Back,Fore
-
-with open("database.txt","r") as f:
-  database=f.read().split("\n")[:-1]
 
 def receive_word():
 
@@ -93,12 +91,12 @@ def word_info(word,guess):
     transform_info(find_yellow_info(word,list(guess)),1)
   ))
 
-def entropy(size,probabilities):
+def entropy(probabilities):
 
   """Calculate entropy with the formula"""
 
   return sum(
-    (i/size)*log2(size/i)
+    (i/sum(probabilities))*log2(sum(probabilities)/i)
       for i in probabilities
   )
 
@@ -106,7 +104,7 @@ def chunks(end,size):
 
   """Create intervals for a upper bounded range with almost same size"""
 
-  return list(zip(l:=[end//size*i for i in range(size)],l[1:]+[end]))
+  yield from list(zip(l:=[end//size*i for i in range(size)],l[1:]+[end]))
 
 def calculate_entropy(searching_words,database):
 
@@ -114,17 +112,25 @@ def calculate_entropy(searching_words,database):
 
   return {
     word: entropy(
-      len(searching_words),
       Counter(map(
         lambda guess: word_info(word,guess),
-        searching_words)
-      ).values()
+        searching_words
+      )).values()
     )
       for word in database
   }
 
-def calculate_best_word(start,stop,words_entropy):
+def calculate_best_word(start,stop,possible_words,database,words_entropy):
 
   """Function for processes to calculate best opener"""
   
-  words_entropy.update(calculate_entropy(database,database[start:stop+1]))
+  words_entropy.update(calculate_entropy(possible_words,database[start:stop+1]))
+
+def execute_threads(thread_list):
+
+  """Execute processes and print the execution time"""
+
+  start_time=time()
+  [*map(lambda t: t.start(),thread_list)]
+  [*map(lambda t: t.join(),thread_list)]
+  print(f"Finished in {time()-start_time} seconds")
