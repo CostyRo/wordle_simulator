@@ -11,7 +11,7 @@ with (
   open("strings.json","r") as f,
   open("settings.txt","r") as g
 ):
-  strings=load_json(f)[g.read().split("\n")[1]]
+  strings: dict[str,str]=load_json(f)[g.read().split("\n")[1]]
 
 def main():
 
@@ -21,12 +21,12 @@ def main():
 
   while 1:
     last_word,expected_entropy,attempt="TAREI",6.413805505806507,1
-    possible_words=database.copy()
+    possible_words: set[str]=database.copy()
 
     connection.send(b"TAREI")
 
     while (result:=connection.recv(5).decode("utf-8")):
-      new_words={
+      new_words: set[str]={
         word
           for word in tqdm(possible_words,desc=strings["searching"])
             if word_info(last_word,word)==result
@@ -39,7 +39,7 @@ def main():
       attempt+=1
 
       if len(possible_words)==1:
-        correct_word=next(iter(possible_words))
+        correct_word: str=next(iter(possible_words))
         connection.send(correct_word.encode())
         connection.recv(5)
 
@@ -51,7 +51,7 @@ def main():
       # update statistics of the game and display them, and break this connection
 
       words_entropy=Manager().dict()
-      thread_list=[
+      thread_list: list[Process]=[
         Process(target=calculate_best_word,args=(start,stop,possible_words,list(database),words_entropy))
           for start,stop in chunks(11454,cpu_count()-1)
       ]
@@ -71,7 +71,7 @@ def main():
 
 if __name__=="__main__":
   with open("database.txt","r") as f:
-    database=set(f.read().split("\n")[:-1])
+    database: set[str]=set(f.read().split("\n")[:-1])
   # load the database into a set
 
   with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as connection:

@@ -1,5 +1,6 @@
 from time import time
 from math import log2
+from typing import Generator
 from collections import Counter
 from json import load as load_json
 
@@ -9,23 +10,23 @@ with (
   open("strings.json","r") as f,
   open("settings.txt","r") as g
 ):
-  strings=load_json(f)[g.read().split("\n")[1]]
+  strings: dict[str,str]=load_json(f)[g.read().split("\n")[1]]
 
 #! I/O functions
 
-def receive_word():
+def receive_word() -> str:
 
   """Receive the word from the user and format it"""
 
   return input(strings["wguess"]).upper()
 
-def print_error(error_message):
+def print_error(error_message: str) -> str:
 
   """Print an ugly error"""
   
   print(strings["gerror"].format(Fore.RED,error_message))
 
-def print_word(word,guess):
+def print_word(word: str,guess: str) -> None:
 
   """Print the word and the info about it in a fancy way"""
 
@@ -42,13 +43,13 @@ def print_word(word,guess):
 
 #! Proccesing functions
 
-def find_green_info(user_guess,guess):
+def find_green_info(user_guess: str,guess: str) -> list[bool]:
 
   """Search for the same letter in the same position"""
 
   return [i==j for i,j in zip(user_guess,guess)]
 
-def find_yellow_info(user_guess,guess):
+def find_yellow_info(user_guess: str,guess: list[str]) -> list[bool]:
 
   """
     Search for letter in other positions
@@ -61,7 +62,7 @@ def find_yellow_info(user_guess,guess):
       for letter in user_guess
   ]
 
-def transform_info(booleans,value=2):
+def transform_info(booleans: list[bool],value: int=2) -> list[int]:
 
   """
     Convert info to 2 for green info and to 1 for yellow info
@@ -70,7 +71,7 @@ def transform_info(booleans,value=2):
 
   return [value if boolean else 0 for boolean in booleans]
 
-def combine_info(green_info,yellow_info):
+def combine_info(green_info: list[int],yellow_info: list[int]) -> list[int]:
 
   """
     Set information to the information with higher precendece
@@ -84,7 +85,7 @@ def combine_info(green_info,yellow_info):
       for i,j in zip(green_info,yellow_info)
   ]
 
-def convert_info(info):
+def convert_info(info: list[int]) -> str:
 
   """
     Convert the information to a code
@@ -95,7 +96,7 @@ def convert_info(info):
 
   return "".join("X" if i==2 else "|" if i==1 else "0" for i in info)
 
-def word_info(word,guess):
+def word_info(word: str,guess: str) -> str:
 
   """Apply all the necessary functions to find the code of the word"""
 
@@ -108,7 +109,7 @@ def word_info(word,guess):
 
 #! Entropy functions
 
-def entropy(probabilities):
+def entropy(probabilities: list[int]) -> float:
 
   """Calculate entropy with the formula"""
 
@@ -117,13 +118,13 @@ def entropy(probabilities):
       for i in probabilities
   )
 
-def chunks(end,size):
+def chunks(end: int,size: int) -> Generator[tuple[int,int],None,None]:
 
   """Create intervals for a upper bounded range with almost same size"""
 
   yield from list(zip(l:=[end//size*i for i in range(size)],l[1:]+[end]))
 
-def calculate_entropy(searching_words,database):
+def calculate_entropy(searching_words,database) -> dict[str,float]:
 
   """Calculate entropy for all words in database"""
 
@@ -141,17 +142,17 @@ def calculate_entropy(searching_words,database):
 
 #! Functions for processes
 
-def calculate_best_word(start,stop,possible_words,database,words_entropy):
+def calculate_best_word(start,stop,possible_words,database,words_entropy) -> None:
 
   """Function for processes to calculate best opener"""
   
   words_entropy.update(calculate_entropy(possible_words,database[start:stop+1]))
 
-def execute_threads(thread_list):
+def execute_threads(thread_list) -> None:
 
   """Execute processes and print the execution time"""
 
-  start_time=time()
+  start_time: float=time()
   [*map(lambda t: t.start(),thread_list)]
   [*map(lambda t: t.join(),thread_list)]
   print(strings["execution_time"].format(time()-start_time))

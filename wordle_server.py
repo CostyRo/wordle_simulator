@@ -4,15 +4,14 @@ from colorama import init as init_colorama
 
 from wordle_func import *
 
-debug=True
-
 init_colorama(autoreset=True)
 
 with (
   open("strings.json","r") as f,
   open("settings.txt","r") as g
 ):
-  strings=load_json(f)[g.read().split("\n")[1]]
+  strings: dict[str,str]=load_json(f)[(settings:=g.read().split("\n"))[1]]
+  debug: int=int(settings[0])
 
 def main():
 
@@ -23,7 +22,7 @@ def main():
       while 1:
         if debug: print(strings["word"].format(word))
 
-        user_guess=conn.recv(5).decode("utf-8")
+        user_guess: str=conn.recv(5).decode("utf-8")
         print(strings["guess"].format(user_guess))
         conn.send(word_info(user_guess,word).encode())
 
@@ -36,7 +35,7 @@ def main():
 
 if __name__=="__main__":
   with open("database.txt","r") as f:
-    database=f.read().split("\n")[:-1]
+    database: list[str]=f.read().split("\n")[:-1]
   # load the database into a list
 
   print(strings["start"])

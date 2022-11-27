@@ -5,10 +5,10 @@ from wordle_func import *
 
 if __name__=="__main__":
   with open("database.txt","r") as f:
-    database=f.read().split("\n")[:-1]
+    database: list[str]=f.read().split("\n")[:-1]
 
   words_entropy=Manager().dict()
-  thread_list=[
+  thread_list: list[Process]=[
     Process(target=calculate_best_word,args=(start,stop,database,database,words_entropy))
       for start,stop in chunks(11454,cpu_count()-1)
   ]

@@ -4,21 +4,20 @@ from colorama import init as init_colorama
 
 from wordle_func import *
 
-debug=True
-
 init_colorama(autoreset=True)
 
 with (
   open("strings.json","r") as f,
   open("settings.txt","r") as g
 ):
-  strings=load_json(f)[g.read().split("\n")[1]]
+  strings: dict[str,str]=load_json(f)[(settings:=g.read().split("\n"))[1]]
+  debug: int=int(settings[0])
 
 def main():
 
   """Main function of this game"""
 
-  guess=choice(database)
+  guess: str=choice(database)
   attempt,guesses=0,[]
   # initialise the game
 
@@ -27,7 +26,7 @@ def main():
   while 1:
     print(strings["attempt"].format(attempt))
 
-    user_guess=receive_word()
+    user_guess: str=receive_word()
     while len(user_guess)!=5:
       print_error(strings["error1"])
       user_guess=receive_word()
@@ -51,7 +50,7 @@ def main():
 
 if __name__=="__main__":
   with open("database.txt","r") as f:
-    database=f.read().split("\n")[:-1]
+    database: list[str]=f.read().split("\n")[:-1]
   # load the database into a list
 
   print(strings["start"])
