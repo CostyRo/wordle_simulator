@@ -8,6 +8,12 @@ debug=True
 
 init_colorama(autoreset=True)
 
+with (
+  open("strings.json","r") as f,
+  open("settings.txt","r") as g
+):
+  strings=load_json(f)[g.read().split("\n")[1]]
+
 def main():
 
   """Main function of this game"""
@@ -19,17 +25,17 @@ def main():
   if debug: print(guess)
 
   while 1:
-    print(f"Attempt {attempt}/11454!")
+    print(strings["attempt"].format(attempt))
 
     user_guess=receive_word()
     while len(user_guess)!=5:
-      print_error("Incorrect size of your guess!")
+      print_error(strings["error1"])
       user_guess=receive_word()
     while user_guess in guesses:
-      print_error("You already tried this word!")
+      print_error(strings["error2"])
       user_guess=receive_word()
     while user_guess not in database:
-      print_error("This word doesn't exist!")
+      print_error(strings["error3"])
       user_guess=receive_word()
     # make sure that everything is fine
 
@@ -39,7 +45,7 @@ def main():
     print_word(user_guess,guess)
 
     if user_guess==guess:
-      print(f"The word was {guess}. You guessed it in {attempt} attempts!\n")
+      print(strings["guessed"].format(guess,attempt))
       break
     # finish the game when the player guess the word
 
@@ -48,7 +54,7 @@ if __name__=="__main__":
     database=f.read().split("\n")[:-1]
   # load the database into a list
 
-  print("You opened Wordle!\n")
+  print(strings["start"])
 
   while 1:
     main()

@@ -8,6 +8,12 @@ debug=True
 
 init_colorama(autoreset=True)
 
+with (
+  open("strings.json","r") as f,
+  open("settings.txt","r") as g
+):
+  strings=load_json(f)[g.read().split("\n")[1]]
+
 def main():
 
   """Main function of this server"""
@@ -15,17 +21,17 @@ def main():
   with (conn:=server.accept()[0]):
     for word in database:
       while 1:
-        if debug: print(f"The word is {word}")
+        if debug: print(strings["word"].format(word))
 
         user_guess=conn.recv(5).decode("utf-8")
-        print(f"Your guess is: {user_guess}")
+        print(strings["guess"].format(user_guess))
         conn.send(word_info(user_guess,word).encode())
 
         print_word(user_guess,word)
 
         if user_guess==word: break
 
-    print("FINISHED!!!")
+    print(strings["finish"])
   # send back to client all the necessary information
 
 if __name__=="__main__":
@@ -33,7 +39,7 @@ if __name__=="__main__":
     database=f.read().split("\n")[:-1]
   # load the database into a list
 
-  print("You opened Wordle!\n")
+  print(strings["start"])
 
   with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as server:
     server.bind((socket.gethostbyname(socket.gethostname()),8555))

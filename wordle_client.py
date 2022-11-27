@@ -1,10 +1,17 @@
 import socket
 from math import log2
+from json import load as load_json
 from multiprocessing import cpu_count,Manager,Process
 
 from tqdm import tqdm
 
 from wordle_func import *
+
+with (
+  open("strings.json","r") as f,
+  open("settings.txt","r") as g
+):
+  strings=load_json(f)[g.read().split("\n")[1]]
 
 def main():
 
@@ -21,14 +28,12 @@ def main():
     while (result:=connection.recv(5).decode("utf-8")):
       new_words={
         word
-          for word in tqdm(possible_words,desc="Searching for word possibilities")
+          for word in tqdm(possible_words,desc=strings["searching"])
             if word_info(last_word,word)==result
       }
       # find all the possible words depending on the last received information
-
-      print(f"Entropy of {last_word} was {log2(len(possible_words)/len(possible_words & new_words))}. Expected entropy was {expected_entropy}.")
+      print(strings["entropy"].format(last_word,log2(len(possible_words)/len(possible_words & new_words)),expected_entropy))
       possible_words&=new_words
-      print(f"Possible words: {len(possible_words)}.\n")
       # display information about entropy and update the set with the possible words
 
       attempt+=1
@@ -40,8 +45,7 @@ def main():
 
         sum_matches+=attempt
         no_matches+=1
-
-        print(f"Correct word was {correct_word}, guessed in {attempt} attemps.\nAverage score is {sum_matches/no_matches} in {no_matches} matches.\n")
+        print(strings["correct_word"].format(correct_word,attempt,sum_matches/no_matches,no_matches))
         break
       # if we know the correct word, send it and receive the success code("XXXXX")
       # update statistics of the game and display them, and break this connection
@@ -53,7 +57,7 @@ def main():
       ]
       # create processes for calculating next best word
       
-      print("Search for new best word.")
+      print(strings["new_best"])
       execute_threads(thread_list)
 
       last_word,expected_entropy=max(

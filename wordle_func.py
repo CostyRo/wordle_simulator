@@ -1,20 +1,29 @@
 from time import time
 from math import log2
 from collections import Counter
+from json import load as load_json
 
 from colorama import Back,Fore
+
+with (
+  open("strings.json","r") as f,
+  open("settings.txt","r") as g
+):
+  strings=load_json(f)[g.read().split("\n")[1]]
+
+#! I/O functions
 
 def receive_word():
 
   """Receive the word from the user and format it"""
 
-  return input("Write your guess: ").upper()
+  return input(strings["wguess"]).upper()
 
 def print_error(error_message):
 
   """Print an ugly error"""
-
-  print(f"{Fore.RED}Error!\n{error_message}")
+  
+  print(strings["gerror"].format(Fore.RED,error_message))
 
 def print_word(word,guess):
 
@@ -28,6 +37,10 @@ def print_word(word,guess):
     ),
     "\n"
   )
+
+#! I/O functions
+
+#! Proccesing functions
 
 def find_green_info(user_guess,guess):
 
@@ -91,6 +104,10 @@ def word_info(word,guess):
     transform_info(find_yellow_info(word,list(guess)),1)
   ))
 
+#! Proccesing functions
+
+#! Entropy functions
+
 def entropy(probabilities):
 
   """Calculate entropy with the formula"""
@@ -120,6 +137,10 @@ def calculate_entropy(searching_words,database):
       for word in database
   }
 
+#! Entropy functions
+
+#! Functions for processes
+
 def calculate_best_word(start,stop,possible_words,database,words_entropy):
 
   """Function for processes to calculate best opener"""
@@ -133,4 +154,6 @@ def execute_threads(thread_list):
   start_time=time()
   [*map(lambda t: t.start(),thread_list)]
   [*map(lambda t: t.join(),thread_list)]
-  print(f"Finished in {time()-start_time} seconds")
+  print(strings["execution_time"].format(time()-start_time))
+
+#! Functions for processes
