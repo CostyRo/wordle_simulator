@@ -14,7 +14,7 @@
 
 ## How this problem(solving Wordle) was approached?
 
-##### I used the "classical" way of [entropy](https://en.wikipedia.org/wiki/Entropy), the same approach as the [approach of 3b1b](https://youtu.be/v68zYyaEmEA)
+##### I used the "classical" way of [entropy](https://en.wikipedia.org/wiki/Entropy#Information_theory), the same approach as the [approach of 3b1b](https://youtu.be/v68zYyaEmEA)
 ##### From start, [not default Wordle rules bug](https://youtu.be/fRed0Xmc2Wg) was solved in this function:
 
 ```py
